@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>法人開業時手続プラットフォーム</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta name="description" content="法人設立時に必要な各種届出書類を、フォームに入力するだけで自動でPDF出力できるプラットフォームです。法人番号や代表者情報を入力し、必要な帳票を選んで簡単に作成できます。">
+</head>
+<body class="bg-light">
+    <!-- モーダルのオーバーレイ -->
+<div id="pons-modal" style="
+position: fixed;
+top: 0; left: 0; right: 0; bottom: 0;
+background-color: rgba(0,0,0,0.5);
+display: flex;
+align-items: center;
+justify-content: center;
+z-index: 1000;
+">
+<!-- モーダル本体 -->
+<div style="
+  background-color: white;
+  padding: 20px;
+  max-width: 600px;
+  width: 90%;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  font-size: 14px;
+  color: #333;
+">
+  <h2 style="font-size: 18px; margin-bottom: 10px;">ご利用前にご確認ください</h2>
+  <p style="margin-bottom: 10px;">
+    このページは
+    <a href="https://sites.google.com/pons-llc.com/pons-llc/" target="_blank" style="color: #1a73e8; text-decoration: underline;">
+      合同会社Pons
+    </a>
+    により提供されています。
+  </p>
+  <p style="margin-bottom: 10px;">
+    当ページは外部との通信をせずに使うことができます。ただし、利用にあたって弊社は一切の責任を負いかねますのでご了承いただいてから、ご利用ください。
+  </p>
+  <p style="margin-bottom: 20px;">
+    弊社はkintoneのプラグイン販売やITコンサルティングを行っておりますので、弊社のご利用についてもご検討いただけますと幸いです。
+  </p>
+  <div style="text-align: right;">
+    <button id="modal-ok-button" style="
+      background-color: #1a73e8;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    ">OK</button>
+  </div>
+</div>
+</div>
+
+
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow-sm">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">法人開業時手続プラットフォーム</h5>
+          </div>
+          <div class="card-body">
+            <form>
+              <div class="mb-3">
+                <label for="company_number" class="form-label">法人番号</label>
+                <input type="text" class="form-control" id="company_number" placeholder="全角数字で入力してください。ハイフンは不要です">
+              </div>
+              <div class="mb-3">
+                <label for="name" class="form-label">会社名</label>
+                <input type="text" class="form-control" id="name">
+              </div>
+              <div class="mb-3">
+                <label for="namefuri" class="form-label">会社名（フリガナ）</label>
+                <input type="text" class="form-control" id="namefuri">
+              </div>
+              <div class="mb-3">
+                <label for="company_address" class="form-label">会社所在地郵便番号</label>
+                <input type="text" class="form-control" id="company_post" placeholder="ハイフン不要です。">
+              </div>
+              <div class="mb-3">
+                <label for="company_address" class="form-label">会社所在地</label>
+                <input type="text" class="form-control" id="company_address">
+              </div>
+              <div class="mb-3">
+                <label for="company_address" class="form-label">会社所在地2行目</label>
+                <input type="text" class="form-control" id="company_address_2">
+              </div>
+              <div class="mb-3">
+                <label for="top_name" class="form-label">代表者名</label>
+                <input type="text" class="form-control" id="top_name" placeholder="性と名の間に全角でスペースを入れてください。">
+              </div>
+              <div class="mb-3">
+                <label for="top_name" class="form-label">代表者名ふりがな</label>
+                <input type="text" class="form-control" id="top_name_furi" placeholder="性と名の間に全角でスペースを入れてください。">
+              </div>
+              <div class="mb-3">
+                <label for="top_address" class="form-label">代表者郵便番号</label>
+                <input type="text" class="form-control" id="top_post" placeholder="ハイフンは不要です">
+              </div>
+              <div class="mb-3">
+                <label for="top_address" class="form-label">代表者住所</label>
+                <input type="text" class="form-control" id="top_address">
+              </div>
+              <div class="mb-3">
+                <label for="company_address" class="form-label">代表者住所２行目</label>
+                <input type="text" class="form-control" id="top_address_2">
+              </div>
+              <div class="mb-3">
+                <label for="contact" class="form-label">連絡先電話番号</label>
+                <input type="text" class="form-control" id="contact" placeholder="ハイフンは不要です">
+              </div>
+              <div class="mb-3">
+                <p for="contact" class="form-label">出力帳票</p>
+                <input name="print" value="images/法人設立届出書.pdf" type="checkbox"><span>法人設立届出書</span><br>
+                <input name="print" value="images/青色申告承認申請書.pdf" type="checkbox"><span>青色申告承認申請書</span><br>
+                <input name="print" value="images/給与支払事務所の登録届.pdf" type="checkbox"><span>給与支払事務所の登録届</span><br>
+                <input name="print" value="images/社会保険適用届.pdf" type="checkbox"><span>社会保険適用届</span><br>
+                <input name="print" value="images/被保険者資格取得届.pdf" type="checkbox"><span>被保険者資格取得届</span><br>
+              </div>
+              <div class="d-grid">
+                <button type="button" class="btn btn-primary" onclick="fillPDF()">出力</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ライブラリ読込 -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <script src="https://unpkg.com/@pdf-lib/fontkit/dist/fontkit.umd.min.js"></script>
+
+  <script>
+    document.getElementById('modal-ok-button').addEventListener('click', function () {
+        document.getElementById('pons-modal').style.display = 'none';
+      });
+
+    async function fillPDF() {
+
+        const formData = {
+            company_number: document.getElementById("company_number").value,
+            name: document.getElementById('name').value,
+            namefuri: document.getElementById('namefuri').value,
+            company_post: document.getElementById("company_post").value,
+            company_address: document.getElementById('company_address').value,
+            top_name_furi: document.getElementById("top_name_furi").value,
+            top_name: document.getElementById('top_name').value,
+            top_address: document.getElementById('top_address').value,
+            top_post: document.getElementById("top_post").value,
+            contact: document.getElementById('contact').value,
+            company_address_2 : document.getElementById("company_address_2").value,
+            top_address_2 : document.getElementById("top_address_2").value
+          };
+
+        const check = document.getElementsByName("print")
+        for (var i=0; i< check.length ; i++){
+            if (check[i].checked){
+                                // PDFテンプレート・フォントを取得
+                const existingPdfBytes = await fetch(check[i].value).then(res => res.arrayBuffer());
+                const fontBytes = await fetch("NotoSansJP-VariableFont_wght.ttf").then(res => res.arrayBuffer());
+
+                const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
+                pdfDoc.registerFontkit(fontkit); // ★ ここでfontkitを登録
+
+                const customFont = await pdfDoc.embedFont(fontBytes);
+                const pages = pdfDoc.getPages();
+                const firstPage = pages[0];
+                const { width, height } = firstPage.getSize();
+
+                // 各フィールドのテキストを描画（座標はPDFに合わせて調整）
+                if (check[i].value === "images/法人設立届出書.pdf"){
+                    //法人設立届出書
+                    firstPage.drawText(formData.company_number.slice(0,4), { x: 325, y: height - 240, size: 18, font: customFont }); //法人番号1
+                    firstPage.drawText(formData.company_number.slice(4,8), { x: 400, y: height - 240, size: 18, font: customFont }); //法人番号2
+                    firstPage.drawText(formData.company_number.slice(8,12), { x: 470, y: height - 240, size: 18, font: customFont }); //法人番号3
+                    firstPage.drawText(formData.name, { x: 320, y: height - 210, size: 12, font: customFont }); //会社名 
+                    firstPage.drawText(formData.namefuri, { x: 320, y: height - 190, size: 12, font: customFont }); //会社名ふりがな
+                    firstPage.drawText(formData.company_address, { x: 320, y: height - 160, size: 10, font: customFont });//納税地住所
+                    firstPage.drawText(formData.company_address_2, { x: 320, y: height - 175, size: 10, font: customFont });//納税地住所2
+                    firstPage.drawText(formData.company_post, { x: 320, y: height - 145, size: 10, font: customFont });//納税地郵便番号
+                    firstPage.drawText(formData.company_post, { x: 320, y: height - 100, size: 10, font: customFont });//法人郵便番号
+                    firstPage.drawText(formData.company_address, { x: 350, y: height - 115, size: 10, font: customFont });//法人住所
+                    firstPage.drawText(formData.company_address_2, { x: 320, y: height - 130, size: 10, font: customFont });//法人住所2
+                    firstPage.drawText(formData.top_name, { x: 320, y: height - 270, size: 12, font: customFont });//代表者名
+                    firstPage.drawText(formData.top_name_furi, { x: 320, y: height - 255, size: 12, font: customFont });//代表者名ふりがな
+                    firstPage.drawText(formData.top_post, { x: 320, y: height - 295, size: 10, font: customFont });//代表者郵便番号
+                    firstPage.drawText(formData.top_address, { x: 320, y: height - 310, size: 10, font: customFont });//代表者住所
+                    firstPage.drawText(formData.top_address_2, { x: 320, y: height - 325, size: 10, font: customFont });//納税地住所
+                    firstPage.drawText(formData.contact, { x: 420, y: height - 135, size: 12, font: customFont });//連絡先
+
+                }else if(check[i].value === "images/青色申告承認申請書.pdf"){
+                    //青色申告承認申請
+                    firstPage.drawText(formData.company_number.slice(0,4), { x: 365, y: height - 160, size: 14, font: customFont }); //法人番号1
+                    firstPage.drawText(formData.company_number.slice(4,8), { x: 420, y: height - 160, size: 14, font: customFont }); //法人番号2
+                    firstPage.drawText(formData.company_number.slice(8,12), { x: 475, y: height - 160, size: 14, font: customFont }); //法人番号3
+                    firstPage.drawText(formData.name, { x: 365, y: height - 130, size: 10, font: customFont }); //会社名 
+                    firstPage.drawText(formData.namefuri, { x: 365, y: height - 108, size: 10, font: customFont }); //会社名ふりがな
+                    firstPage.drawText(formData.company_address, { x: 365, y: height - 75, size: 10, font: customFont });//納税地住所
+                    firstPage.drawText(formData.company_address_2, { x: 365, y: height - 85, size: 10, font: customFont });//納税地住所
+                    firstPage.drawText(formData.company_post, { x: 365, y: height - 65, size: 10, font: customFont });//納税地郵便番号
+                    firstPage.drawText(formData.top_name_furi, { x: 365, y: height - 175, size: 10, font: customFont });//代表者名ふりがな
+                    firstPage.drawText(formData.top_name, { x: 365, y: height - 190, size: 12, font: customFont });//代表者名
+                    firstPage.drawText(formData.top_post, { x: 365, y: height - 210, size: 10, font: customFont });//代表者〒
+                    firstPage.drawText(formData.top_address, { x: 365, y: height - 220, size: 10, font: customFont });//代表者住所
+                    firstPage.drawText(formData.top_address_2, { x: 365, y: height - 230, size: 10, font: customFont });//代表者住所
+                    firstPage.drawText(formData.contact, { x: 415, y: height - 93, size: 8, font: customFont });//連絡先
+
+                }else if(check[i].value === "images/給与支払事務所の登録届.pdf"){
+                    //給与支払事務所等の届
+                    firstPage.drawText(formData.company_post, { x: 330, y: height - 89, size: 8, font: customFont });//納税地郵便番号
+                    firstPage.drawText(formData.company_address, { x: 330, y: height - 99, size: 8, font: customFont });//納税地住所
+                    firstPage.drawText(formData.company_address_2, { x: 330, y: height - 109, size: 8, font: customFont });//納税地住所
+                    firstPage.drawText(formData.contact, { x: 350, y: height - 119, size: 8, font: customFont });//連絡先
+                    firstPage.drawText(formData.namefuri, { x: 330, y: height - 130, size: 10, font: customFont }); //会社名ふりがな
+                    firstPage.drawText(formData.name, { x: 330, y: height - 145, size: 10, font: customFont }); //会社名       
+                    firstPage.drawText(formData.company_number.slice(0,4), { x: 335, y: height - 182, size: 18, font: customFont }); //法人番号1
+                    firstPage.drawText(formData.company_number.slice(4,8), { x: 405, y: height - 182, size: 18, font: customFont }); //法人番号2
+                    firstPage.drawText(formData.company_number.slice(8,12), { x: 475, y: height - 182, size: 18, font: customFont }); //法人番号3
+                    
+                    firstPage.drawText(formData.top_name_furi, { x: 365, y: height - 195, size: 10, font: customFont });//代表者名ふりがな
+                    firstPage.drawText(formData.top_name, { x: 365, y: height - 215, size: 12, font: customFont });//代表者名
+                }else if(check[i].value==="images/社会保険適用届.pdf"){
+                    //社会保険適用届
+                    firstPage.drawText(formData.company_post.slice(0,3), { x: 88, y: height - 98, size: 8, font: customFont });//納税地郵便番号
+                    firstPage.drawText(formData.company_post.slice(3,8), { x: 120, y: height - 98, size: 8, font: customFont });//納税地郵便番号
+                    firstPage.drawText(formData.company_address, { x: 100, y: height - 123, size: 8, font: customFont });//納税地住所
+                    firstPage.drawText(formData.company_address_2, { x: 100, y: height - 133, size: 8, font: customFont });//納税地住所
+                    firstPage.drawText(formData.namefuri, { x: 100, y: height - 156, size: 8, font: customFont }); //会社名ふりがな
+                    firstPage.drawText(formData.name, { x: 100, y: height - 166, size: 8, font: customFont }); //会社名  
+                    firstPage.drawText(formData.contact, { x: 100, y: height - 203, size: 8, font: customFont });//連絡先
+                    firstPage.drawText(formData.top_name_furi.split("　")[0], { x: 150, y: height - 233, size: 8, font: customFont });//代表者名ふりがな
+                    firstPage.drawText(formData.top_name_furi.split("　")[1], { x: 210, y: height - 233, size: 8, font: customFont });//代表者名ふりがな
+                    firstPage.drawText(formData.top_name.split("　")[0], { x: 150, y: height - 250, size: 8, font: customFont });//代表者名
+                    firstPage.drawText(formData.top_name.split("　")[1], { x: 230, y: height - 250, size: 8, font: customFont });//代表者名
+
+                    firstPage.drawText(formData.top_post.slice(0,3), { x: 120, y: height - 268, size: 8, font: customFont });//納税地郵便番号
+                    firstPage.drawText(formData.top_post.slice(3,8), { x: 150, y: height - 268, size: 8, font: customFont });//納税地郵便番号
+                    firstPage.drawText(formData.top_address, { x: 130, y: height - 278, size: 8, font: customFont });//納税地住所
+                    firstPage.drawText(formData.top_address_2, { x: 130, y: height - 288, size: 8, font: customFont });//納税地住所
+
+                    firstPage.drawText(formData.company_number.slice(0,4), { x: 330, y: height - 420, size: 18, font: customFont }); //法人番号1
+                    firstPage.drawText(formData.company_number.slice(4,8), { x: 405, y: height - 420, size: 18, font: customFont }); //法人番号2
+                    firstPage.drawText(formData.company_number.slice(8,12), { x: 480, y: height - 420, size: 18, font: customFont }); //法人番号3
+                }else if(check[i].value ==="images/被保険者資格取得届.pdf"){
+                    //被保険者資格取得届
+                    firstPage.drawText(formData.company_post.slice(0,3), { x: 78, y: height - 100, size: 8, font: customFont });//納税地郵便番号
+                    firstPage.drawText(formData.company_post.slice(3,8), { x: 113, y: height - 100, size: 8, font: customFont });//納税地郵便番号
+                    firstPage.drawText(formData.company_address, { x: 100, y: height - 123, size: 8, font: customFont });//納税地住所
+                    firstPage.drawText(formData.company_address_2, { x: 100, y: height - 133, size: 8, font: customFont });//納税地住所7
+                    firstPage.drawText(formData.top_name, { x: 100, y: height - 186, size: 8, font: customFont });//代表者名
+                    firstPage.drawText(formData.name, { x: 100, y: height - 166, size: 8, font: customFont }); //会社名                    
+                    firstPage.drawText(formData.contact, { x: 100, y: height - 203, size: 8, font: customFont });//連絡先 
+                }
+
+                const pdfBytes = await pdfDoc.save();
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = check[i].value.split("/")[1];
+                link.click();                
+            }
+
+        }
+
+        alert("完了")
+    }
+
+    
+
+  </script>
+
+</body>
+</html>
