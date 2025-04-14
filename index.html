@@ -121,6 +121,7 @@ z-index: 1000;
                 <input name="print" value="images/給与支払事務所の登録届.pdf" type="checkbox"><span>給与支払事務所の登録届</span><br>
                 <input name="print" value="images/社会保険適用届.pdf" type="checkbox"><span>社会保険適用届</span><br>
                 <input name="print" value="images/被保険者資格取得届.pdf" type="checkbox"><span>被保険者資格取得届</span><br>
+                <p>※スマートフォンの方は１つずつ作成ください。（複数ダウンロード不可）</p>
               </div>
               <div class="d-grid">
                 <button type="button" class="btn btn-primary" onclick="fillPDF()">出力</button>
@@ -141,6 +142,43 @@ z-index: 1000;
     document.getElementById('modal-ok-button').addEventListener('click', function () {
         document.getElementById('pons-modal').style.display = 'none';
       });
+
+    function getQueryParams() {
+        const params = new URLSearchParams(window.location.search);
+        const result = {};
+        for (const [key, value] of params.entries()) {
+          result[key] = decodeURIComponent(value);
+        }
+        return result;
+    }
+  
+    window.addEventListener('DOMContentLoaded', () => {
+        const params = getQueryParams();
+  
+        const ids = [
+          'company_number',
+          'name',
+          'namefuri',
+          'company_post',
+          'company_address',
+          'company_address_2',
+          'top_name',
+          'top_name_furi',
+          'top_post',
+          'top_address',
+          'top_address_2',
+          'contact'
+        ];
+  
+        ids.forEach(id => {
+          if (params[id]) {
+            const el = document.getElementById(id);
+            if (el) el.value = params[id];
+          }
+        });
+      });
+
+    
 
     async function fillPDF() {
 
@@ -268,8 +306,6 @@ z-index: 1000;
             }
 
         }
-
-        alert("完了")
     }
 
     
